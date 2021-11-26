@@ -1,1 +1,0 @@
-/home/travis/.bash_aliases
