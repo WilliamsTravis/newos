@@ -18,7 +18,12 @@ def startup():
     manager = ip.alias_manager
 
     # Read in bash alias file
-    alias_path = os.path.expanduser("~/.bashrc")
+    if os.path.exists(os.path.expanduser("~/.bash_aliases")):
+        alias_path = os.path.expanduser("~/.bash_aliases")
+    elif os.path.exists(os.path.expanduser("~/.bashrc")):
+        alias_path = os.path.expanduser("~/.bashrc")
+    else:
+        alias_path = os.path.expanduser("~/.bash_profile")
     lines = open(alias_path).readlines()
 
     # Check each line in the file for an alias and get its command
