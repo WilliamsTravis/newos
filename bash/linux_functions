@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# Custom functions
+
+# Temorary directory bookmarks
+function bmhelp {
+   echo "Create a temporary bookmark for your current environment."
+   echo
+   echo "Syntax:  bm name directory"
+   echo "options:"
+   echo "  name          A string to use to cd into the bookmarked directory."
+   echo "  directory     A path to a directory for the bookmark to cd into."
+   echo "  h     Print this Help."
+   echo
+}
+
+function bm {
+    while getopt ":h" option; do
+        case $option in
+            h)
+                bmhelp
+                exit;;
+            \?)
+                echo "Error: invalid opton."
+                exit;;
+        esac
+    done
+
+    # Check if alias exists as variable or command already, assign value.
+    # ...
+
+    # Assign alias
+    alias $arg1="cd $directory"
+
+    # Signal success
+    echo "bm: alias $arg1 assigned to $directory."
+
+}

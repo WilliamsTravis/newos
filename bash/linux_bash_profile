@@ -1,0 +1,96 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# Bookmarks
+alias atb="cd /shared-projects/rev/projects/weto/fy21/atb"
+alias bespoke="cd /shared-projects/rev/projects/weto/fy22/bespoke"
+alias blm="cd /shared-projects/rev/projects/blm/fy21/lease_rates"
+alias coe="cd /shared-projects/rev/projects/coe/2020"
+alias dreview="cd ~/review_datasets"
+alias gh="cd ~/github"
+alias hydrogen="cd /shared-projects/rev/projects/weto/fy22/hydrogen"
+alias lpo="cd /shared-projects/rev/projects/lpo/fy21"
+alias projects="cd /shared-projects/rev/projects"
+alias rev="cd /projects/rev"
+alias rico="cd /shared-projects/rev/projects/puerto_rico/fy21"
+alias rpm="cd /shared-projects/rev/projects/rpm"
+alias rr="cd /home/twillia2/github/revruns/revruns"
+alias scratch="cd /scratch/twillia2"
+alias shared="cd /shared-projects/rev"
+alias weto="cd /shared-projects/rev/projects/weto"
+
+# Commands
+alias lf='ls -1 -d "$PWD/"*'
+alias mtop="top -U twillia2"
+alias sq='squeue -u twillia2  --format="%.18i %.9P %.30j %.8u %.8T %.10M %.9l %.6D %R" --me'
+alias wsq="watch -n 1 squeue -u twillia2"
+
+# Applications
+alias bspyder="nohup spyder -w . >/dev/null 2>&1 &"
+alias bqgis="conda activate /shared-projects/rev/modulefiles/alternate_envs/qgis/ && qgis >/dev/null 2>&1 &"
+
+# Conda Environments
+alias lconda="source ~/.bash_conda"
+alias lqgis="conda activate /shared-projects/rev/modulefiles/alternate_envs/qgis/"
+alias lrev="conda deactivate && conda activate /shared-projects/rev/modulefiles/conda/envs/rev/"
+alias lreview="conda deactivate && conda activate /shared-projects/rev/modulefiles/alternate_envs/review/"
+alias lrevold="conda deactivate && conda activate /shared-projects/rev/modulefiles/alternate_envs/revold/"
+alias lrr="conda deactivate && conda activate /shared-projects/rev/modulefiles/alternate_envs/revruns/"
+
+# Functions
+function review {
+  remote_port=$2
+  local_port=8000
+  remote_user=twillia2
+  remote_host="$1.hpc.nrel.gov"
+  url="http://localhost:$port"
+  cmd="nohup ssh -NL "$local_port":localhost:"$remote_port" $remote_user@$remote_host >/dev/null 2>&1 &"
+  echo "Running $cmd at $url"
+  eval "$cmd"
+}
+
+function rename {
+  from=$1;
+  to=$2;
+  shift 2;
+  for i in "$@";
+    do j=`echo $i | sed "s/$from/$to/"`;
+     mv "$i" "$j";
+   done
+}
+
+function newpy {
+    name=$1;
+    echo $1
+    username=$(whoami);
+    date=$(date);
+    echo $username;
+    echo $date
+    header=$'"""\n ${username}\n$date\n"""'
+    header2="${username}\n$date\n"
+    echo $header
+    echo $header2
+}
+
+# Temorary directory bookmarks
+function bmhelp {
+   echo "Create a temporary bookmark for your current environment."
+   echo
+   echo "Syntax:  bm name directory"
+   echo "options:"
+   echo "  name          A string to use to cd into the bookmarked directory."
+   echo "  directory     A path to a directory for the bookmark to cd into."
+   echo "  h     Print this Help."
+   echo
+}
+
+
+export NREL_API_KEY="pG44VGRaxLO7KVE3eykdQ9eYmBMaJVWs46xzx7cF"
+
