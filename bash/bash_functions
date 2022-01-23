@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Temorary directory bookmarks
+function bm() {
+    # Check for help request
+    a1=$1
+    if [[ -z $1 || a1 == "-h" || a1 == "--help" ]]; then                                                   
+        echo "BookMark: an alias wrapper. Create a temporary bookmark for a directory. After usage, type bookmark name to go to that directory."
+        echo ""
+        echo "Note:"
+        echo "Be careful when changing environments; while bm will check for existing commands in your current environment, don't overwrite a "
+        echo "command that might exist in others. If this happens, since this is an alias wrapper, enter 'unalias name' to clear that bookmark "
+	echo "or open new shell to clear all bm defined bookmarks. Also, to view all defined aliases, bookmarks or otherwise, simply type 'alias'."
+        echo ""
+        echo "Usage:  bm name [directory]"
+        echo "options:"
+        echo "  name            A string to use to cd into the bookmarked directory."
+        echo "  directory       A path to a directory for the bookmark to cd into. Defaults to current directory."
+        echo "  --help | -h     Print this help statement."
+        return;        
+    fi
+
+    # Check the bookmark name doesn't start with a "-"
+    if [ ${a1:0:1} == "-" ] ; then
+        echo "Error: Cannot use '-' as first the character, use a different name."
+        return;
+    fi
+
+    # Check if alias exists as variable or command already.
+    check=$($a1 2>&1)
+    if [[ ${check} != *"command not found"* ]]; then
+        echo "Error: '$a1' is already assigned, use a different name."
+	return;
+    fi
+
+    # Assign directory 
+    if [[ -z "$2" || $2 == "." ]]; then
+        d=$(pwd)
+    else
+        d=$2
+    fi
+
+    # Assign alias
+    alias $1="cd $d"
+
+    # Signal success
+    echo "Alias '$1' assigned to 'cd $d'"
+
+}
+
+
+# Create File with Python Header
+function pcode()
+{
+    touch $1;
+    echo "# -*- coding: utf-8 -*-" >> $1
+    echo '"""Module Name.' >> $1
+    echo "" >> $1
+    echo "Module description." >> $1
+    echo "" >> $1
+    echo "Author: $USER" >> $1
+    echo "Date: $(date)" >> $1
+    echo '"""' >> $1
+    if [ "$(type -t code)" = "file" ]; then
+        code $1
+    fi
+}
