@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# Temorary directory bookmarks
 function bm() {
+    # Temorary directory bookmarks
+
     # Check for help request
     a1=$1
     if [[ -z $1 || a1 == "-h" || a1 == "--help" ]]; then                                                   
@@ -49,19 +50,20 @@ function bm() {
 }
 
 
-# Create File with Python Header
-function pcode()
-{
-    touch $1;
-    echo "# -*- coding: utf-8 -*-" >> $1
-    echo '"""Module Name.' >> $1
-    echo "" >> $1
-    echo "Module description." >> $1
-    echo "" >> $1
-    echo "Author: $USER" >> $1
-    echo "Date: $(date)" >> $1
-    echo '"""' >> $1
-    if [ "$(type -t code)" = "file" ]; then
-        code $1
-    fi
+function gdal++() {
+    # Use g++ compiler with GDAL library and include paths
+    g++ $1 `gdal-config --cflags` \
+           `gdal-config --libs` \
+           `gdal-config --dep-libs` \
+           -lnetcdf_c++ \
+           -lgdal
+}
+
+
+function clingdal() {
+    # Open cling session with GDAL library and include path
+    cling `gdal-config --cflags` \
+          `gdal-config --libs` \
+          `gdal-config --dep-libs` \
+          -lnetcdf_c++ 
 }

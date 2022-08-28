@@ -1,0 +1,10 @@
+ A simple rasterization routine from the internet:
+
+https://joshbeam.com/articles/triangle_rasterization/
+
+
+The next steps are partial rasterization. This involves, I'm assuming, applying this simple routine to
+both the full triangle and just the outline to get the exterior cells. For just these exterior cells,
+we will calculate the geometry of the overlapping vector portion and use that to calculate the percent
+inclusion, applying that value to the target grid. Then we replace the exterior full grid cells with the
+new % inclusion exterior cells.
