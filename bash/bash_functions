@@ -1,36 +1,71 @@
 #!/bin/bash
 
+# Temorary directory bookmarks
 function bm() {
-    # Temorary directory bookmarks
-
-    # Check for help request
+    # Set variables
     a1=$1
-    if [[ -z $1 || a1 == "-h" || a1 == "--help" ]]; then                                                   
+    RED=$(tput setaf 1)
+    CYAN=$(tput setaf 6)
+
+    # Print help
+    if [[ -z $1 || $a1 == "-h" || $a1 == "--help" ]]; then                                                   
         echo "BookMark: an alias wrapper. Create a temporary bookmark for a directory. After usage, type bookmark name to go to that directory."
         echo ""
-        echo "Note:"
-        echo "Be careful when changing environments; while bm will check for existing commands in your current environment, don't overwrite a "
-        echo "command that might exist in others. If this happens, since this is an alias wrapper, enter 'unalias name' to clear that bookmark "
-	echo "or open new shell to clear all bm defined bookmarks. Also, to view all defined aliases, bookmarks or otherwise, simply type 'alias'."
-        echo ""
-        echo "Usage:  bm name [directory]"
-        echo "options:"
-        echo "  name            A string to use to cd into the bookmarked directory."
+        echo "Usage:  bm name [directory][-l|-h]"
+        echo "commands/options:"
+        echo "  name            A string to use to cd into the target directory."
         echo "  directory       A path to a directory for the bookmark to cd into. Defaults to current directory."
+        echo ""
+        echo "  --list | -l     List all currently available bookmark aliases, including any pre-defined bash aliases."
         echo "  --help | -h     Print this help statement."
         return;        
     fi
 
+    # Print version
+    if [[ -z $1 || $a1 == "-v" || $a1 == "--version" ]]; then                                                   
+        echo "0.0.1"
+        return;   
+    fi
+
+    # List current bookmarks
+    IFS=$'\n'
+    if [[ -z $1 || $a1 == "-l" || $a1 == "--list" ]]; then
+        echo Available Bookmarks:
+        empty=''
+        home='~'
+        for i in $(alias); do
+            if [[ "$i" == *"='cd "* ]]; then
+                bookmark="${i/alias/$empty}"
+                bookmark="${bookmark/cd /$empty}"
+                bookmark="${bookmark/$home/$HOME}"
+                echo "  ${CYAN}${bookmark}"
+            fi
+        done
+        tput sgr0
+        return;       
+    fi
+
     # Check the bookmark name doesn't start with a "-"
-    if [ ${a1:0:1} == "-" ] ; then
-        echo "Error: Cannot use '-' as first the character, use a different name."
+    if [[ ${a1:0:1} == "-" ]] ; then
+        echo "${RED}Error: Cannot use '-' as first the character, use a different name."
+        tput sgr0
         return;
+    fi
+
+    # Check that the target directory exists
+    if [[ $# -eq 2 ]]; then
+        if [[ ! -d $2 ]]; then
+            echo "${RED}No directory named $2."
+            tput sgr0
+            return;
+        fi
     fi
 
     # Check if alias exists as variable or command already.
     check=$($a1 2>&1)
     if [[ ${check} != *"command not found"* ]]; then
-        echo "Error: '$a1' is already assigned, use a different name."
+        echo "${RED}Error: '$a1' is already assigned, use a different name."
+        tput sgr0
 	return;
     fi
 
@@ -45,8 +80,24 @@ function bm() {
     alias $1="cd $d"
 
     # Signal success
-    echo "Alias '$1' assigned to 'cd $d'"
+    echo "${CYAN}Alias '$1' assigned to '$d'."
+    tput sgr0
+}
 
+function pcode()
+{
+    touch $1;
+    echo "# -*- coding: utf-8 -*-" >> $1
+    echo '"""Module Name.' >> $1
+    echo "" >> $1
+    echo "Module description." >> $1
+    echo "" >> $1
+    echo "Author: $USER" >> $1
+    echo "Date: $(date)" >> $1
+    echo '"""' >> $1
+    if [ "$(type -t code)" = "file" ]; then
+        code $1
+    fi
 }
 
 
