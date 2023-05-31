@@ -40,8 +40,8 @@ def startup():
 
             # Otherwise, use bookmarks
             else:
-                loc = cmd.replace("cd ", "")
-                ip.magic("bookmark {} {}".format(alias, loc))
+                cmd = cmd.replace("cd ", "")
+                ip.run_line_magic("bookmark {} {}".format(alias, cmd))
 
 
 def magic_editor():
