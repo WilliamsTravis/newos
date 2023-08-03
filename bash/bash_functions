@@ -45,6 +45,30 @@ function bm() {
         return;       
     fi
 
+    # Print version
+    if [[ -z $1 || $a1 == "-v" || $a1 == "--version" ]]; then                                                   
+        echo "0.0.1"
+        return;   
+    fi
+
+    # List current bookmarks
+    IFS=$'\n'
+    if [[ -z $1 || $a1 == "-l" || $a1 == "--list" ]]; then
+        echo Available Bookmarks:
+        empty=''
+        home='~'
+        for i in $(alias); do
+            if [[ "$i" == *"='cd "* ]]; then
+                bookmark="${i/alias/$empty}"
+                bookmark="${bookmark/cd /$empty}"
+                bookmark="${bookmark/$home/$HOME}"
+                echo "  ${CYAN}${bookmark}"
+            fi
+        done
+        tput sgr0
+        return;       
+    fi
+
     # Check the bookmark name doesn't start with a "-"
     if [[ ${a1:0:1} == "-" ]] ; then
         echo "${RED}Error: Cannot use '-' as first the character, use a different name."
@@ -229,6 +253,18 @@ EOL
 # Pattern Cancel (SLURM)
 function pcancel {
     squeue -u $USER --format='%.18i %.100j' | grep $1 | awk '{print $1}' | xargs -n 1 scancel
+}
+
+
+# Rename
+function rename {
+  from=$1;
+  to=$2;
+  shift 2;
+  for i in "$@";
+    do j=`echo $i | sed "s/$from/$to/"`;
+     mv "$i" "$j";
+   done
 }
 
 
