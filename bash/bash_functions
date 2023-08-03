@@ -133,21 +133,22 @@ function pcode()
 Author: $USER
 Date: $(date)
 """
-import os
+from pathlib import Path
 
 
-class ATemplate:
+class Template:
     """A docstring."""
 
     def __init__(self):
-        """Initialize an ATemplate object."""
+        """Initialize a Template object."""
 
     def __repr__(self):
-        """Return an ATemplate object representation string."""
+        """Return a Template object representation string."""
         address = hex(id(self))
+        name = self.__class__.__name__
         msgs = [f"\n   {k}={v}" for k, v in self.__dict__.items()]
-        msg = ", ".join(msgs)
-        return f"<ATemplate object at {address}>: {msg}"
+        msg = " ".join(msgs)
+        return f"<{name} object at {address}>: {msg}"
 
 
 if __name__ == "__main__":
