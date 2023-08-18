@@ -33,7 +33,7 @@ function bm() {
         echo Available Bookmarks:
         empty=''
         home='~'
-        for i in $(alias); do
+        for i in $(alias | sort -r); do
             if [[ "$i" == *"='cd "* ]]; then
                 bookmark="${i/alias/$empty}"
                 bookmark="${bookmark/cd /$empty}"
