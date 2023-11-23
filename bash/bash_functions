@@ -45,30 +45,6 @@ function bm() {
         return;       
     fi
 
-    # Print version
-    if [[ -z $1 || $a1 == "-v" || $a1 == "--version" ]]; then                                                   
-        echo "0.0.1"
-        return;   
-    fi
-
-    # List current bookmarks
-    IFS=$'\n'
-    if [[ -z $1 || $a1 == "-l" || $a1 == "--list" ]]; then
-        echo Available Bookmarks:
-        empty=''
-        home='~'
-        for i in $(alias); do
-            if [[ "$i" == *"='cd "* ]]; then
-                bookmark="${i/alias/$empty}"
-                bookmark="${bookmark/cd /$empty}"
-                bookmark="${bookmark/$home/$HOME}"
-                echo "  ${CYAN}${bookmark}"
-            fi
-        done
-        tput sgr0
-        return;       
-    fi
-
     # Check the bookmark name doesn't start with a "-"
     if [[ ${a1:0:1} == "-" ]] ; then
         echo "${RED}Error: Cannot use '-' as first the character, use a different name."
@@ -136,19 +112,25 @@ Date: $(date)
 from pathlib import Path
 
 
-class Template:
+HOME = Path("$PWD")
+
+
+class ATemplate:
     """A docstring."""
 
     def __init__(self):
-        """Initialize a Template object."""
+        """Initialize an ATemplate object."""
 
     def __repr__(self):
-        """Return a Template object representation string."""
+        """Return an ATemplate object representation string."""
         address = hex(id(self))
-        name = self.__class__.__name__
         msgs = [f"\n   {k}={v}" for k, v in self.__dict__.items()]
-        msg = " ".join(msgs)
-        return f"<{name} object at {address}>: {msg}"
+        msg = ", ".join(msgs)
+        return f"<ATemplate object at {address}>: {msg}"
+
+
+def main():
+    """A docstring."""
 
 
 if __name__ == "__main__":
@@ -266,37 +248,6 @@ function rename {
     do j=`echo $i | sed "s/$from/$to/"`;
      mv "$i" "$j";
    done
-}
-
-
-# Rename
-function rename {
-  from=$1;
-  to=$2;
-  shift 2;
-  for i in "$@";
-    do j=`echo $i | sed "s/$from/$to/"`;
-     mv "$i" "$j";
-   done
-}
-
-
-function gdal++() {
-    # Use g++ compiler with GDAL library and include paths
-    g++ $1 `gdal-config --cflags` \
-           `gdal-config --libs` \
-           `gdal-config --dep-libs` \
-           -lnetcdf_c++ \
-           -lgdal
-}
-
-
-function clingdal() {
-    # Open cling session with GDAL library and include path
-    cling `gdal-config --cflags` \
-          `gdal-config --libs` \
-          `gdal-config --dep-libs` \
-          -lnetcdf_c++ 
 }
 
 
