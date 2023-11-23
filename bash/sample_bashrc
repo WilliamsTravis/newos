@@ -1,0 +1,24 @@
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# Source generic aliases
+if [ -f ~/github/newos/bash/bash_aliases ]; then
+    . ~/github/newos/bash/bash_aliases
+fi
+
+# Source local aliases
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
+# Source generic functions
+if [ -f ~/github/newos/bash/bash_functions ]; then
+    . ~/github/newos/bash/bash_functions
+fi
+
+# Source local functions
+if [ -f ~/.bash_functions ]; then
+    . ~/.bash_functions
+fi

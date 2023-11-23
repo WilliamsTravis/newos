@@ -1,0 +1,12 @@
+# Bookmarks
+alias gh="cd ~/github"
+alias ll='ls -lh --color=auto'
+alias mtop="top -U $USER"
+alias pullall="find . -mindepth 1 -maxdepth 1 -type d  -print -exec git --git-dir='{}/.git' --work-tree='{}' pull --all \;"
+
+# Bash Editing
+alias ebash="code ~/.bashrc && code ~/.bash_aliases && code ~/github/newos/bash/bash_functions"
+alias sbash="source ~/.bashrc"
+
+# Applications
+alias bspyder="conda activate spyder && env QTWEBENGINE_DISABLE_SANDBOX=1 spyder && nohup spyder -w . >/dev/null 1>&1 &"
