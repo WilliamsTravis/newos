@@ -1,5 +1,43 @@
 #!/bin/bash
 
+# Alias copy
+function acp()
+{
+    # Print help
+    if [[ -z $1 || $1 == "-h" || $1 == "--help" ]]; then                                                   
+        echo "Alias Copy: a cp wrapper. Copy a file to a directory set by an alias or by bm."
+        echo ""
+        echo "Usage:  acp SOURCE ALIAS"
+        echo "Commands/Options:"
+        echo "  SOURCE          A file or folder."
+        echo "  ALIAS           An alias containing the path to the target directory."
+        echo ""
+        echo "  --list | -l     List all currently available bookmark aliases, including any pre-defined bash aliases."
+        echo "  --help | -h     Print this help statement."
+        return;
+    fi
+
+    # Match this alias to its string and infer a path
+    target="${@: -1}"
+    command alias $target 
+    if [ "$?" -eq 0 ]; then
+        alias_str=$(alias $target)
+        contains_path=$(echo $alias_str | cut -d "/" -f2-)  # TODO: Make generic to any line containing a path
+        target=/$(echo $contains_path | cut -d " " -f1 | cut -d"'" -f 1)
+    fi
+
+    # Expand globs and evaluate copy command
+    target_stat="$(stat -L -c %d:%i $target)"
+    for file in "${@:1:$#-1}"; do
+        source_stat="$(stat -L -c %d:%i $file)"
+        if [ $source_stat != $target_stat ]; then
+            cp $file $target
+        fi
+    done
+
+}
+
+
 # Bookmark
 function bm() {
     # Set variables
@@ -147,6 +185,30 @@ EOL
     # Open file in VScode
     if [ "$(type -t code)" = "file" ]; then
         code $path
+    fi
+}
+
+
+# Print python versions (because the stupid devs removed pip install x==)
+function pipv() {
+    if [[ -z $1 || $a1 == "-h" || $a1 == "--help" ]]; then                                                   
+        echo "Pip Versions: Print available versions for a Python package."
+        echo ""
+        echo "Usage:  pipv <package>"
+        echo "Commands/Options:"
+        echo "  --help | -h     Print this help statement."
+        return;
+    fi
+
+    url="https://pypi.org/pypi/${1}/json"
+    echo $url
+    if curl --output /dev/null --silent --head --fail "$url"; then
+        out=$(curl -L -s $url \
+                | jq  -r '.releases | keys | .[]' \
+                | sort -V)
+        echo $out
+    else
+        echo "Cannot find package for '$1', '$url' does not exist."
     fi
 }
 
